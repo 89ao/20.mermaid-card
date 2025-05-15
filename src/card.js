@@ -46,7 +46,6 @@ export class MermaidCard extends LitElement {
     return html`
             <ha-card header="${this._header}">
                 <div class="card-content">
-                  <div id="input">${this._mermaid}</div>
                   <div id="output"></div>
                 </div>
             </ha-card>
