@@ -21647,6 +21647,45 @@ var $040001cdf6cad6dd$export$2e2bcd8739ae039 = (0, $def2de46b9306e8a$export$dbf3
         align-content: center;
         flex-wrap: wrap;
     }
+
+    ha-card {
+        width: 100%;
+        overflow: visible;
+    }
+
+    .card-content {
+        padding: 16px;
+        display: flex;
+        justify-content: center;
+    }
+
+    #output {
+        width: 100%;
+        line-height: 1.5; /* 增加行高，为下降部分留出空间 */
+        overflow: visible;
+    }
+
+    /* 针对SVG内部元素的样式调整 */
+    #output svg {
+        width: 100%;
+        height: auto;
+        overflow: visible;
+        /* 确保SVG有足够的下边距 */
+        margin-bottom: 10px;
+    }
+
+    /* 针对文本元素的调整 */
+    #output text {
+        font-size: 14px; /* 调整字体大小 */
+        font-family: 'Arial', sans-serif; /* 使用更清晰的字体 */
+    }
+  
+    /* 为有下降部分的字母预留更多空间 */
+    #output .node text,
+    #output .cluster text {
+        dominant-baseline: text-before-edge;
+        dy: 1em;
+    }
 `;
 
 
@@ -21682,6 +21721,24 @@ class $bf513b85805031e6$export$510e2443662e7f2e extends (0, $ab210b2da7b39b9d$ex
         console.log(this._mermaid);
         (0, $8ZZbk.K).render("theGraph", this._mermaid).then((result)=>{
             output.innerHTML = result.svg;
+            // 获取渲染后的SVG元素
+            const svg = output.querySelector("svg");
+            if (svg) {
+                // 确保SVG有合适的viewBox
+                if (!svg.hasAttribute("viewBox") && svg.hasAttribute("width") && svg.hasAttribute("height")) {
+                    const width = parseFloat(svg.getAttribute("width"));
+                    const height = parseFloat(svg.getAttribute("height"));
+                    svg.setAttribute("viewBox", `0 0 ${width} ${height}`);
+                }
+                // 增加一点额外空间以适应下降字母
+                svg.style.paddingBottom = "10px";
+                // 找到所有文本元素并优化显示
+                const textElements = svg.querySelectorAll("text");
+                textElements.forEach((text)=>{
+                    // 确保文本有适当的定位
+                    if (!text.hasAttribute("dy")) text.setAttribute("dy", "0.3em");
+                });
+            }
         });
     }
     // declarative part
